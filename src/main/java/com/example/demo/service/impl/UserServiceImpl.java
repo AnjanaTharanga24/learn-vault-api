@@ -10,20 +10,26 @@ import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponse registerUser(UserRequest userRequest) throws AllReadyExistsException {
         User user = new User();
         user.setName(userRequest.getName());
         user.setEmail(userRequest.getEmail());
-        user.setPassword(userRequest.getPassword());
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
         User existsUser = userRepository.findByUsername(userRequest.getUsername());
 
@@ -46,12 +52,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public LoginResponse loginUser(LoginRequest loginRequest) throws NotFoundException {
 
-        User foundUser = userRepository.findByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+        Optional<User> userOptional = userRepository.findByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
 
-        if(foundUser == null){
+        if(!userOptional.isPresent()){
            throw new NotFoundException("User not found with username: " + loginRequest.getUsername()
                    + " and password: " + loginRequest.getPassword());
         }
+
+        User foundUser = userOptional.get();
 
         return LoginResponse.builder()
                 .id(foundUser.getId())
@@ -60,4 +68,5 @@ public class UserServiceImpl implements UserService {
                 .username(foundUser.getUsername())
                 .build();
     }
+
 }
