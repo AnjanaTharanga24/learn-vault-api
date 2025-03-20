@@ -9,7 +9,11 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
+import com.example.demo.util.JwtUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
     @Override
     public UserResponse registerUser(UserRequest userRequest) throws AllReadyExistsException {
@@ -51,22 +57,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginResponse loginUser(LoginRequest loginRequest) throws NotFoundException {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+        );
 
-        Optional<User> userOptional = userRepository.findByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        if(!userOptional.isPresent()){
-           throw new NotFoundException("User not found with username: " + loginRequest.getUsername()
-                   + " and password: " + loginRequest.getPassword());
+        String jwt = jwtUtil.generateToken(userDetails);
+
+        User foundUser = userRepository.findByUsername(loginRequest.getUsername());
+
+        if (foundUser == null){
+            throw new NotFoundException("User not found with username: " + loginRequest.getUsername());
         }
-
-        User foundUser = userOptional.get();
 
         return LoginResponse.builder()
                 .id(foundUser.getId())
                 .name(foundUser.getName())
                 .email(foundUser.getEmail())
                 .username(foundUser.getUsername())
+                .token(jwt)
                 .build();
     }
-
 }
