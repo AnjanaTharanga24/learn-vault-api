@@ -1,0 +1,5 @@
+# Created at 2025-03-24T09:08:01.458
+Boot Manifest-JAR contains absolute paths in classpath 'D:\projects\Paf-2025\backend\learn-vault-api\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
