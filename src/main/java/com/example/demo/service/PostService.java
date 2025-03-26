@@ -6,4 +6,6 @@ import com.example.demo.dto.response.PostResponse;
 public interface PostService {
 
     PostResponse createPost(PostRequest postRequest);
+
+    String deletePost(String postId,String userId);
 }

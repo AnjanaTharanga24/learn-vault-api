@@ -54,7 +54,25 @@ public class PostServiceImpl implements PostService {
                 .postId(post.getPostId())
                 .description(post.getDescription())
                 .imageUrls(post.getImageUrls())
+                .username(user.getUsername())
                 .videoUrl(post.getVideoUrl())
                 .build();
+    }
+
+    @Override
+    public String deletePost(String postId, String userId) {
+        // Find the post by its ID or throw an exception if not found
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
+
+        // Check if the requesting user is the creator of the post
+        // This assumes your User class has a getUserId() method.
+        if (!post.getUser().getId().equals(userId)) {
+            throw new RuntimeException("You are not authorized to delete this post.");
+        }
+
+        // Delete the post
+        postRepository.deleteById(postId);
+        return "Post deleted successfully";
     }
 }
