@@ -8,4 +8,6 @@ public interface PostService {
     PostResponse createPost(PostRequest postRequest);
 
     String deletePost(String postId,String userId);
+
+    PostResponse updatePost(String postId, String userId,PostRequest updateRequest);
 }

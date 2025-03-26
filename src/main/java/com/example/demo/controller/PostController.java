@@ -19,13 +19,17 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/")
-    public PostResponse register(@RequestBody PostRequest postRequest) throws AllReadyExistsException {
+    public PostResponse createPost(@RequestBody PostRequest postRequest) throws AllReadyExistsException {
         return postService.createPost(postRequest);
     }
 
     @DeleteMapping("/")
-    public String delete(@RequestParam String postId, String userId) throws NotFoundException {
+    public String deletePost(@RequestParam String postId, String userId) throws NotFoundException {
         return postService.deletePost(postId,userId);
     }
 
+    @PutMapping("/")
+    public PostResponse updatePost(@RequestParam String postId,String userId,@RequestBody PostRequest postRequest) throws NotFoundException {
+        return postService.updatePost(postId,userId,postRequest);
+    }
 }

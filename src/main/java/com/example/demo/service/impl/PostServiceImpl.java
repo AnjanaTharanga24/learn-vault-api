@@ -75,4 +75,38 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(postId);
         return "Post deleted successfully";
     }
+
+    @Override
+    public PostResponse updatePost(String postId, String userId,PostRequest updateRequest ) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
+
+        // Verify that the requester is the creator of the post
+        if (!post.getUser().getId().equals(userId)) {
+            throw new RuntimeException("You are not authorized to update this post.");
+        }
+
+        // Validate image URLs: if more than 3 URLs provided, throw an exception
+        if (updateRequest.getImageUrls() != null && updateRequest.getImageUrls().size() > 3) {
+            throw new IllegalArgumentException("Maximum allowed image URLs is 3.");
+        }
+
+        // Update the post fields using the values from postRequest
+        post.setDescription(updateRequest.getDescription());
+        post.setVideoUrl(updateRequest.getVideoUrl());
+        if (updateRequest.getImageUrls() != null) {
+            post.setImageUrls(new ArrayList<>(updateRequest.getImageUrls()));
+        }
+
+        // Save the updated post
+        postRepository.save(post);
+
+        return PostResponse.builder()
+                .postId(post.getPostId())
+                .postDate(post.getPostDate())
+                .description(post.getDescription())
+                .imageUrls(post.getImageUrls())
+                .videoUrl(post.getVideoUrl())
+                .build();
+    }
 }
