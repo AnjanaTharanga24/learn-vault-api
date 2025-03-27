@@ -10,5 +10,4 @@ public class UserRequest {
     private String email;
     private String password;
     private String username;
-    private String imgUrl;
 }
