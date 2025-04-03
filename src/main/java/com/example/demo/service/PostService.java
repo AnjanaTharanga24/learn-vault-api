@@ -5,6 +5,8 @@ import com.example.demo.dto.request.PostRequest;
 import com.example.demo.dto.response.CommentResponse;
 import com.example.demo.dto.response.PostResponse;
 
+import java.util.List;
+
 public interface PostService {
 
     PostResponse createPost(PostRequest postRequest);
@@ -14,5 +16,7 @@ public interface PostService {
     PostResponse updatePost(String postId, String userId,PostRequest updateRequest);
 
     String addComment(String postId,CommentRequest commentRequest);
+
+    List<PostResponse> getAllPosts();
 
 }

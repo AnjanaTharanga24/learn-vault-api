@@ -2,40 +2,44 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.CommentRequest;
 import com.example.demo.dto.request.PostRequest;
-import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.response.PostResponse;
-import com.example.demo.dto.response.UserResponse;
 import com.example.demo.exception.AllReadyExistsException;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.service.PostService;
-import com.mongodb.internal.bulk.DeleteRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/post")
+@RequestMapping("/api/v1/")
 @AllArgsConstructor
 public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/")
+    @PostMapping("/post")
     public PostResponse createPost(@RequestBody PostRequest postRequest) throws AllReadyExistsException {
         return postService.createPost(postRequest);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("/post")
     public String deletePost(@RequestParam String postId, String userId) throws NotFoundException {
         return postService.deletePost(postId,userId);
     }
 
-    @PutMapping("/")
+    @PutMapping("/post")
     public PostResponse updatePost(@RequestParam String postId,String userId,@RequestBody PostRequest postRequest) throws NotFoundException {
         return postService.updatePost(postId,userId,postRequest);
     }
 
-    @PostMapping("/comment/")
+    @PostMapping("/comment")
     public String addComment(@RequestParam String postId,@RequestBody CommentRequest commentRequest) throws NotFoundException {
         return postService.addComment(postId,commentRequest);
+    }
+
+    @GetMapping("/feed")
+    public List<PostResponse> getAllPosts() {
+        return postService.getAllPosts();
     }
 }

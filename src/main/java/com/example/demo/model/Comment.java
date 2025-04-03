@@ -18,6 +18,5 @@ public class Comment {
     String comment;
     @DBRef
     private User user;
-    @DBRef
-    private Post post;
+    String postId;
 }

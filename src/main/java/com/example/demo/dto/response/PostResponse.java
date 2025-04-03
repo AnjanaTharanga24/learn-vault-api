@@ -1,14 +1,19 @@
 package com.example.demo.dto.response;
 
 import com.example.demo.model.Comment;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PostResponse {
 
     private String postId;
@@ -18,5 +23,5 @@ public class PostResponse {
     private String videoUrl;
     private String username;
     private int likeCount;
-    private List<Comment> comments;
+    private ArrayList<Comment> comments;
 }

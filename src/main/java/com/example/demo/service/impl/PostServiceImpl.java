@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -119,36 +121,44 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
 
-        // Create a new Comment instance and populate its fields
-        Comment comment = new Comment();
-        comment.setComment(commentRequest.getComment());
-        comment.setCommentedDate(new Date());
-
         // Look up the user who made the comment (assuming your DTO has a userId field)
         User user = userRepository.findById(commentRequest.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + commentRequest.getUserId()));
+
+        // Create a new Comment instance and populate its fields
+        Comment comment = new Comment();
+        comment.setPostId(post.getPostId());
         comment.setUser(user);
+        comment.setComment(commentRequest.getComment());
+        comment.setCommentedDate(new Date());
+
 
         commentRepository.save(comment);
         // Add the new comment to the post's comment list
         post.getComments().add(comment);
 
         // Save the updated post
-        Post updatedPost = postRepository.save(post);
+        postRepository.save(post);
 
-        // Build and return a PostResponse DTO (assuming you have a method for this mapping)
-//        PostResponse response = new PostResponse();
-//        response.setPostId(updatedPost.getPostId());
-//        response.setPostDate(updatedPost.getPostDate());
-//        response.setDescription(updatedPost.getDescription());
-//        response.setImageUrls(updatedPost.getImageUrls());
-//        response.setVideoUrl(updatedPost.getVideoUrl());
-//        response.setUsername(updatedPost.getUser().getUsername());
-//        response.setComments(updatedPost.getComments());
-//        // Optionally, include the comments in the response
-//        // response.setComments(mapCommentsToResponse(updatedPost.getComments()));
 
         return "Comment was added successfully";
+    }
+
+    @Override
+    public List<PostResponse> getAllPosts() {
+        List<Post> posts = postRepository.findAll();
+
+        return posts.stream().map(post -> {
+            PostResponse response = new PostResponse();
+            response.setPostId(post.getPostId());
+            response.setPostDate(post.getPostDate());
+            response.setDescription(post.getDescription());
+            response.setImageUrls(post.getImageUrls());
+            response.setVideoUrl(post.getVideoUrl());
+            response.setUsername(post.getUser().getUsername());
+            response.setComments(post.getComments()); // Assuming PostResponse.comments is of a compatible type
+            return response;
+        }).collect(Collectors.toList());
     }
 
 
