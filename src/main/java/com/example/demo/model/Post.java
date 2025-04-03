@@ -23,6 +23,8 @@ public class Post {
     String videoUrl;
     @DBRef
     private List<User> likedBy = new ArrayList<>();
+    @DBRef
+    private ArrayList<Comment> comments = new ArrayList<>();
 
 
 }

@@ -16,6 +16,7 @@ com\example\demo\model\Comment.class
 com\example\demo\repository\PostRepository.class
 com\example\demo\service\impl\UserServiceImpl.class
 com\example\demo\service\PostService.class
+com\example\demo\repository\CommentRepository.class
 com\example\demo\dto\response\CommentResponse$CommentResponseBuilder.class
 com\example\demo\exception\AllReadyExistsException.class
 com\example\demo\dto\request\PostRequest.class

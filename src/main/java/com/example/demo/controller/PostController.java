@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.CommentRequest;
 import com.example.demo.dto.request.PostRequest;
 import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.response.PostResponse;
@@ -31,5 +32,10 @@ public class PostController {
     @PutMapping("/")
     public PostResponse updatePost(@RequestParam String postId,String userId,@RequestBody PostRequest postRequest) throws NotFoundException {
         return postService.updatePost(postId,userId,postRequest);
+    }
+
+    @PostMapping("/comment/")
+    public String addComment(@RequestParam String postId,@RequestBody CommentRequest commentRequest) throws NotFoundException {
+        return postService.addComment(postId,commentRequest);
     }
 }

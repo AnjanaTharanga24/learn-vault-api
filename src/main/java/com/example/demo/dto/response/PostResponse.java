@@ -1,5 +1,6 @@
 package com.example.demo.dto.response;
 
+import com.example.demo.model.Comment;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,5 +18,5 @@ public class PostResponse {
     private String videoUrl;
     private String username;
     private int likeCount;
-    private List<CommentResponse> comments;
+    private List<Comment> comments;
 }

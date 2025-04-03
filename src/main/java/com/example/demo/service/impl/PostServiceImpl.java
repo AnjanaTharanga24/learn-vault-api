@@ -1,14 +1,16 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.request.CommentRequest;
 import com.example.demo.dto.request.PostRequest;
 import com.example.demo.dto.response.PostResponse;
+import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
+import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.PostService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-
+    private final CommentRepository commentRepository;
 
 
     @Override
@@ -109,4 +111,45 @@ public class PostServiceImpl implements PostService {
                 .videoUrl(post.getVideoUrl())
                 .build();
     }
+
+    //add comment
+    @Override
+    public String addComment(String postId, CommentRequest commentRequest) {
+        // Retrieve the post by its ID
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
+
+        // Create a new Comment instance and populate its fields
+        Comment comment = new Comment();
+        comment.setComment(commentRequest.getComment());
+        comment.setCommentedDate(new Date());
+
+        // Look up the user who made the comment (assuming your DTO has a userId field)
+        User user = userRepository.findById(commentRequest.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + commentRequest.getUserId()));
+        comment.setUser(user);
+
+        commentRepository.save(comment);
+        // Add the new comment to the post's comment list
+        post.getComments().add(comment);
+
+        // Save the updated post
+        Post updatedPost = postRepository.save(post);
+
+        // Build and return a PostResponse DTO (assuming you have a method for this mapping)
+//        PostResponse response = new PostResponse();
+//        response.setPostId(updatedPost.getPostId());
+//        response.setPostDate(updatedPost.getPostDate());
+//        response.setDescription(updatedPost.getDescription());
+//        response.setImageUrls(updatedPost.getImageUrls());
+//        response.setVideoUrl(updatedPost.getVideoUrl());
+//        response.setUsername(updatedPost.getUser().getUsername());
+//        response.setComments(updatedPost.getComments());
+//        // Optionally, include the comments in the response
+//        // response.setComments(mapCommentsToResponse(updatedPost.getComments()));
+
+        return "Comment was added successfully";
+    }
+
+
 }
