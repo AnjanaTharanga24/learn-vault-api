@@ -48,4 +48,25 @@ public class LearningProgressImpl implements LearningProgressService {
                 .date(savedLearningProgress.getDate())
                 .build();
     }
+
+    @Override
+    public LearningProgressResponse getLearningProgressByUserId(String userId) throws NotFoundException {
+
+        Optional<LearningProgress> optionalLearningProgress = learningProgressRepository
+        .findLearningProgressByUserId(userId);
+
+        if (!optionalLearningProgress.isPresent()){
+            throw new NotFoundException("learning progress notfound with user id : " + userId);
+        }
+
+        LearningProgress foundLearningProgress = optionalLearningProgress.get();
+
+        return LearningProgressResponse.builder()
+                .userId(foundLearningProgress.getUserId())
+                .skill(foundLearningProgress.getSkill())
+                .level(foundLearningProgress.getLevel())
+                .description(foundLearningProgress.getDescription())
+                .date(foundLearningProgress.getDate())
+                .build();
+    }
 }
