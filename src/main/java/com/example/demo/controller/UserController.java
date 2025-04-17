@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/user")
 @CrossOrigin("http://localhost:3000/")
@@ -24,6 +26,21 @@ public class UserController {
     @PostMapping("/register")
     public UserResponse register(@RequestBody UserRequest userRequest) throws AllReadyExistsException {
        return userService.registerUser(userRequest);
+    }
+
+    @GetMapping("/all-users")
+    public List<UserResponse> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @PutMapping("/update/{userId}")
+    public UserResponse updateUser(@PathVariable String userId, @RequestBody UserRequest userRequest) throws NotFoundException, AllReadyExistsException {
+        return userService.updateUser(userId, userRequest);
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    public void deleteUser(@PathVariable String userId) throws NotFoundException {
+        userService.deleteUser(userId);
     }
 
     @PostMapping("/login")
