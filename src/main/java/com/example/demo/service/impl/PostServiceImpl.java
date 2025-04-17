@@ -1,18 +1,22 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.request.CommentRequest;
 import com.example.demo.dto.request.PostRequest;
 import com.example.demo.dto.response.PostResponse;
+import com.example.demo.model.Comment;
 import com.example.demo.model.Post;
 import com.example.demo.model.User;
+import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.PostService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -20,7 +24,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-
+    private final CommentRepository commentRepository;
 
 
     @Override
@@ -54,7 +58,108 @@ public class PostServiceImpl implements PostService {
                 .postId(post.getPostId())
                 .description(post.getDescription())
                 .imageUrls(post.getImageUrls())
+                .username(user.getUsername())
                 .videoUrl(post.getVideoUrl())
                 .build();
     }
+
+    @Override
+    public String deletePost(String postId, String userId) {
+        // Find the post by its ID or throw an exception if not found
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
+
+        // Check if the requesting user is the creator of the post
+        // This assumes your User class has a getUserId() method.
+        if (!post.getUser().getId().equals(userId)) {
+            throw new RuntimeException("You are not authorized to delete this post.");
+        }
+
+        // Delete the post
+        postRepository.deleteById(postId);
+        return "Post deleted successfully";
+    }
+
+    @Override
+    public PostResponse updatePost(String postId, String userId,PostRequest updateRequest ) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
+
+        // Verify that the requester is the creator of the post
+        if (!post.getUser().getId().equals(userId)) {
+            throw new RuntimeException("You are not authorized to update this post.");
+        }
+
+        // Validate image URLs: if more than 3 URLs provided, throw an exception
+        if (updateRequest.getImageUrls() != null && updateRequest.getImageUrls().size() > 3) {
+            throw new IllegalArgumentException("Maximum allowed image URLs is 3.");
+        }
+
+        // Update the post fields using the values from postRequest
+        post.setDescription(updateRequest.getDescription());
+        post.setVideoUrl(updateRequest.getVideoUrl());
+        if (updateRequest.getImageUrls() != null) {
+            post.setImageUrls(new ArrayList<>(updateRequest.getImageUrls()));
+        }
+
+        // Save the updated post
+        postRepository.save(post);
+
+        return PostResponse.builder()
+                .postId(post.getPostId())
+                .postDate(post.getPostDate())
+                .description(post.getDescription())
+                .imageUrls(post.getImageUrls())
+                .videoUrl(post.getVideoUrl())
+                .build();
+    }
+
+    //add comment
+    @Override
+    public String addComment(String postId, CommentRequest commentRequest) {
+        // Retrieve the post by its ID
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
+
+        // Look up the user who made the comment (assuming your DTO has a userId field)
+        User user = userRepository.findById(commentRequest.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + commentRequest.getUserId()));
+
+        // Create a new Comment instance and populate its fields
+        Comment comment = new Comment();
+        comment.setPostId(post.getPostId());
+        comment.setUser(user);
+        comment.setComment(commentRequest.getComment());
+        comment.setCommentedDate(new Date());
+
+
+        commentRepository.save(comment);
+        // Add the new comment to the post's comment list
+        post.getComments().add(comment);
+
+        // Save the updated post
+        postRepository.save(post);
+
+
+        return "Comment was added successfully";
+    }
+
+    @Override
+    public List<PostResponse> getAllPosts() {
+        List<Post> posts = postRepository.findAll();
+
+        return posts.stream().map(post -> {
+            PostResponse response = new PostResponse();
+            response.setPostId(post.getPostId());
+            response.setPostDate(post.getPostDate());
+            response.setDescription(post.getDescription());
+            response.setImageUrls(post.getImageUrls());
+            response.setVideoUrl(post.getVideoUrl());
+            response.setUsername(post.getUser().getUsername());
+            response.setComments(post.getComments()); // Assuming PostResponse.comments is of a compatible type
+            return response;
+        }).collect(Collectors.toList());
+    }
+
+
 }

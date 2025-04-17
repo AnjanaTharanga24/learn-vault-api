@@ -10,8 +10,8 @@ import java.util.Date;
 public class CommentResponse {
 
     private String commentId;
-    private String content;
+    private String comment;
     private Date commentedDate;
-    private String username;
+    private String postId;
     private String userId;
 }
