@@ -24,7 +24,7 @@ public class PostController {
     }
 
     @DeleteMapping("/post")
-    public String deletePost(@RequestParam String postId, String userId) throws NotFoundException {
+    public String deletePost(@RequestParam String postId,@RequestParam String userId) throws NotFoundException {
         return postService.deletePost(postId,userId);
     }
 
