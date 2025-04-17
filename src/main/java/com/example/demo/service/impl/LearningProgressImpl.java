@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.request.LearningProgressRequest;
+import com.example.demo.dto.request.UpdateLearningProgressRequest;
 import com.example.demo.dto.response.LearningProgressResponse;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.LearningProgress;
@@ -10,6 +11,8 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.LearningProgressService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -34,7 +37,7 @@ public class LearningProgressImpl implements LearningProgressService {
         learningProgress.setSkill(learningProgressRequest.getSkill());
         learningProgress.setLevel(learningProgressRequest.getLevel());
         learningProgress.setDescription(learningProgressRequest.getDescription());
-        learningProgress.setDate(learningProgressRequest.getDate());
+        learningProgress.setDate(LocalDate.now());
 
         LearningProgress savedLearningProgress = learningProgressRepository.save(learningProgress);
 
@@ -67,6 +70,34 @@ public class LearningProgressImpl implements LearningProgressService {
                 .level(foundLearningProgress.getLevel())
                 .description(foundLearningProgress.getDescription())
                 .date(foundLearningProgress.getDate())
+                .build();
+    }
+
+    @Override
+    public LearningProgressResponse updateLearningProgress(String postId, UpdateLearningProgressRequest updateLearningProgressRequest) throws NotFoundException {
+
+        Optional<LearningProgress> optionalLearningProgress = learningProgressRepository.findById(postId);
+
+        if (!optionalLearningProgress.isPresent()){
+            throw new NotFoundException("post not found with id : " + postId);
+        }
+
+        LearningProgress foundLearningProgress = optionalLearningProgress.get();
+
+        foundLearningProgress.setSkill(updateLearningProgressRequest.getSkill());
+        foundLearningProgress.setLevel(updateLearningProgressRequest.getLevel());
+        foundLearningProgress.setDescription(updateLearningProgressRequest.getDescription());
+        foundLearningProgress.setDate(LocalDate.now());
+
+        LearningProgress updatedLearningProgress = learningProgressRepository.save(foundLearningProgress);
+
+        return LearningProgressResponse.builder()
+                .id(foundLearningProgress.getId())
+                .userId(foundLearningProgress.getUserId())
+                .skill(updatedLearningProgress.getSkill())
+                .level(updatedLearningProgress.getLevel())
+                .description(updatedLearningProgress.getDescription())
+                .date(updatedLearningProgress.getDate())
                 .build();
     }
 }
