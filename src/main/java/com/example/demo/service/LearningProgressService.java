@@ -7,4 +7,5 @@ import com.example.demo.exception.NotFoundException;
 public interface LearningProgressService {
 
     LearningProgressResponse createLearningProgress(LearningProgressRequest learningProgressRequest) throws NotFoundException;
+    LearningProgressResponse getLearningProgressByUserId(String userId) throws NotFoundException;
 }
