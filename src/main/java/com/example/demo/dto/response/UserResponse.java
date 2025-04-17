@@ -15,6 +15,8 @@ public class UserResponse {
     private String email;
     private String username;
     private String imgUrl;
+    @Builder.Default
     private List<FollowInfo> followers = new ArrayList<>();
+    @Builder.Default
     private List<FollowInfo> following = new ArrayList<>();
 }
