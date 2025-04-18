@@ -17,6 +17,8 @@ public interface PostService {
 
     String addComment(String postId,CommentRequest commentRequest);
 
+    CommentResponse updateComment(String postId, String userId, String commentId, CommentRequest req);
+
     List<PostResponse> getAllPosts();
 
 }
