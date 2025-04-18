@@ -177,6 +177,30 @@ public class PostServiceImpl implements PostService {
                 .build();
     }
 
+    @Override
+    public void deleteComment(String postId, String commentId, String userId) {
+        // verify post exists
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
+
+        // load comment
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment not found with id: " + commentId));
+
+        // 3) check permissions: must be either comment’s author OR post’s author
+        boolean isCommentAuthor = comment.getUser().getId().equals(userId);
+        boolean isPostAuthor    = post.getUser().getId().equals(userId);
+        if (! (isCommentAuthor || isPostAuthor) ) {
+            throw new AccessDeniedException("Only the comment’s author or the post’s author can delete this comment");
+        }
+
+        // 4) remove the reference from post.comments
+        post.getComments().removeIf(c -> c.getCommentId().equals(commentId));
+        postRepository.save(post);
+
+        // 5) delete the comment document
+        commentRepository.deleteById(commentId);
+    }
 
 
     @Override

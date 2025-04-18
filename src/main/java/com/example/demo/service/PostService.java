@@ -19,6 +19,8 @@ public interface PostService {
 
     CommentResponse updateComment(String postId, String userId, String commentId, CommentRequest req);
 
+    void deleteComment(String postId,String commentId,String userId);
+
     List<PostResponse> getAllPosts();
 
 }
