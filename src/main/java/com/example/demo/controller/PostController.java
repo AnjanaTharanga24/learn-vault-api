@@ -2,11 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.CommentRequest;
 import com.example.demo.dto.request.PostRequest;
+import com.example.demo.dto.response.CommentResponse;
 import com.example.demo.dto.response.PostResponse;
 import com.example.demo.exception.AllReadyExistsException;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.service.PostService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +38,17 @@ public class PostController {
     @PostMapping("/comment")
     public String addComment(@RequestParam String postId,@RequestBody CommentRequest commentRequest) throws NotFoundException {
         return postService.addComment(postId,commentRequest);
+    }
+
+    @PutMapping("/comment")
+    public CommentResponse updateComment(@RequestParam String postId, @RequestParam String userId, @RequestParam String commentId, @RequestBody CommentRequest commentRequest) throws NotFoundException {
+        return postService.updateComment(postId,userId,commentId,commentRequest);
+    }
+
+    @DeleteMapping("/comment")
+    public ResponseEntity<Void> deleteComment(@RequestParam String postId,@RequestParam String commentId,@RequestParam String userId) {
+        postService.deleteComment(postId, commentId, userId);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/feed")
