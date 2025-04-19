@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.LearningPlanRequest;
+import com.example.demo.dto.request.LearningPlanStatusUpdateRequest;
 import com.example.demo.dto.request.LearningProgressRequest;
 import com.example.demo.dto.request.UpdateLearningProgressRequest;
 import com.example.demo.dto.response.LearningPlanResponse;
@@ -50,5 +51,9 @@ public class LearningController {
         return learningPlanService.createLearningPlan(learningPlanRequest);
     }
 
+    @PutMapping("/plans")
+    public LearningPlanResponse updateLearningPlanStatus(@RequestBody LearningPlanStatusUpdateRequest learningPlanStatusUpdateRequest) throws NotFoundException{
+        return learningPlanService.updateLearningPlanStatus(learningPlanStatusUpdateRequest);
+    }
 
 }
