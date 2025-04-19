@@ -8,6 +8,8 @@ import com.example.demo.service.LearningProgressService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/learning")
@@ -22,7 +24,7 @@ public class LearningController {
 
     //TODO = create List for LearningProgressResponse
     @GetMapping("/progresses/{user-id}")
-    public LearningProgressResponse getLearningProgressByUser(@PathVariable("user-id") String userId) throws NotFoundException{
+    public List<LearningProgressResponse> getLearningProgressByUser(@PathVariable("user-id") String userId) throws NotFoundException{
         return learningProgressService.getLearningProgressByUserId(userId);
     }
 
