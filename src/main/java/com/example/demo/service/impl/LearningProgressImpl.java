@@ -100,4 +100,18 @@ public class LearningProgressImpl implements LearningProgressService {
                 .date(updatedLearningProgress.getDate())
                 .build();
     }
+
+    @Override
+    public String deleteLearningProgress(String postId) throws NotFoundException {
+
+        Optional<LearningProgress> optionalLearningProgress = learningProgressRepository.findById(postId);
+
+        if (!optionalLearningProgress.isPresent()){
+            throw new NotFoundException("post not found with id : " + postId);
+        }
+
+        learningProgressRepository.deleteById(postId);
+
+        return "post deleted successfull with id : " + postId;
+    }
 }

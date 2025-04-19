@@ -10,5 +10,6 @@ public interface LearningProgressService {
     LearningProgressResponse createLearningProgress(LearningProgressRequest learningProgressRequest) throws NotFoundException;
     LearningProgressResponse getLearningProgressByUserId(String userId) throws NotFoundException;
     LearningProgressResponse updateLearningProgress( String postId ,UpdateLearningProgressRequest updateLearningProgressRequest) throws NotFoundException;
+    String deleteLearningProgress(String postId) throws NotFoundException;
 
 }

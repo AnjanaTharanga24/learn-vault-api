@@ -31,4 +31,9 @@ public class LearningController {
         return learningProgressService.updateLearningProgress(postId,updateLearningProgressRequest);
     }
 
+    @DeleteMapping("/progresses/{post-id}")
+    public String deletePostById(@PathVariable("post-id") String postId)throws NotFoundException{
+        return learningProgressService.deleteLearningProgress(postId);
+    }
+
 }
