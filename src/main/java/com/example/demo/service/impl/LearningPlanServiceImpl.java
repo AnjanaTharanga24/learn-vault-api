@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.request.LearningPlanRequest;
+import com.example.demo.dto.request.LearningPlanStatusUpdateRequest;
 import com.example.demo.dto.response.LearningPlanResponse;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.LearningPlan;
@@ -50,6 +51,32 @@ public class LearningPlanServiceImpl implements LearningPlanService {
                 .startDate(createdLearningPlan.getStartDate())
                 .endDate(createdLearningPlan.getEndDate())
                 .status(createdLearningPlan.getStatus())
+                .build();
+    }
+
+    @Override
+    public LearningPlanResponse updateLearningPlanStatus(LearningPlanStatusUpdateRequest learningPlanStatusUpdateRequest) throws NotFoundException {
+
+        Optional<LearningPlan> optionalLearningPlan = learningPlanRepository.findById(learningPlanStatusUpdateRequest.getPostId());
+
+        if (!optionalLearningPlan.isPresent()){
+            throw new NotFoundException("learning plan not found with id : " + learningPlanStatusUpdateRequest.getPostId());
+        }
+
+        LearningPlan learningPlan = optionalLearningPlan.get();
+        learningPlan.setStatus(learningPlanStatusUpdateRequest.getStatus());
+
+        LearningPlan updatedLearningPlan = learningPlanRepository.save(learningPlan);
+
+        return LearningPlanResponse.builder()
+                .id(updatedLearningPlan.getId())
+                .userId(updatedLearningPlan.getUserId())
+                .title(updatedLearningPlan.getTitle())
+                .topics(updatedLearningPlan.getTopics())
+                .resources(updatedLearningPlan.getResources())
+                .startDate(updatedLearningPlan.getStartDate())
+                .endDate(updatedLearningPlan.getEndDate())
+                .status(updatedLearningPlan.getStatus())
                 .build();
     }
 }
