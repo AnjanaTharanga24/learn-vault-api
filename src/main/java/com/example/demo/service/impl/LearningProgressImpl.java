@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,24 +55,28 @@ public class LearningProgressImpl implements LearningProgressService {
     }
 
     @Override
-    public LearningProgressResponse getLearningProgressByUserId(String userId) throws NotFoundException {
+    public List<LearningProgressResponse> getLearningProgressByUserId(String userId) throws NotFoundException {
+        List<LearningProgress> learningProgressList = learningProgressRepository.findLearningProgressByUserId(userId);
 
-        Optional<LearningProgress> optionalLearningProgress = learningProgressRepository
-        .findLearningProgressByUserId(userId);
-
-        if (!optionalLearningProgress.isPresent()){
-            throw new NotFoundException("learning progress notfound with user id : " + userId);
+        if (learningProgressList.isEmpty()) {
+            throw new NotFoundException("No learning progress entries found for user id: " + userId);
         }
 
-        LearningProgress foundLearningProgress = optionalLearningProgress.get();
+        List<LearningProgressResponse> responseList = new ArrayList<>();
 
-        return LearningProgressResponse.builder()
-                .userId(foundLearningProgress.getUserId())
-                .skill(foundLearningProgress.getSkill())
-                .level(foundLearningProgress.getLevel())
-                .description(foundLearningProgress.getDescription())
-                .date(foundLearningProgress.getDate())
-                .build();
+        for (LearningProgress progress : learningProgressList) {
+            LearningProgressResponse response = LearningProgressResponse.builder()
+                    .id(progress.getId())
+                    .userId(progress.getUserId())
+                    .skill(progress.getSkill())
+                    .level(progress.getLevel())
+                    .description(progress.getDescription())
+                    .date(progress.getDate())
+                    .build();
+            responseList.add(response);
+        }
+
+        return responseList;
     }
 
     @Override
