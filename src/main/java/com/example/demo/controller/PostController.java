@@ -35,21 +35,7 @@ public class PostController {
         return postService.updatePost(postId,userId,postRequest);
     }
 
-    @PostMapping("/comment")
-    public String addComment(@RequestParam String postId,@RequestBody CommentRequest commentRequest) throws NotFoundException {
-        return postService.addComment(postId,commentRequest);
-    }
 
-    @PutMapping("/comment")
-    public CommentResponse updateComment(@RequestParam String postId, @RequestParam String userId, @RequestParam String commentId, @RequestBody CommentRequest commentRequest) throws NotFoundException {
-        return postService.updateComment(postId,userId,commentId,commentRequest);
-    }
-
-    @DeleteMapping("/comment")
-    public ResponseEntity<Void> deleteComment(@RequestParam String postId,@RequestParam String commentId,@RequestParam String userId) {
-        postService.deleteComment(postId, commentId, userId);
-        return ResponseEntity.noContent().build();
-    }
 
     @GetMapping("/feed")
     public List<PostResponse> getAllPosts() {
