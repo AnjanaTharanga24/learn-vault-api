@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dto.request.LearningPlanRequest;
 import com.example.demo.dto.request.LearningPlanStatusUpdateRequest;
+import com.example.demo.dto.request.UpdateLearningPlanRequest;
 import com.example.demo.dto.response.LearningPlanResponse;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.LearningPlan;
@@ -12,6 +13,8 @@ import com.example.demo.service.LearningPlanService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -78,5 +81,63 @@ public class LearningPlanServiceImpl implements LearningPlanService {
                 .endDate(updatedLearningPlan.getEndDate())
                 .status(updatedLearningPlan.getStatus())
                 .build();
+    }
+
+    @Override
+    public LearningPlanResponse updateLearningPlan(UpdateLearningPlanRequest updateLearningPlanRequest , String postId) throws NotFoundException {
+
+        Optional<LearningPlan> optionalLearningPlan = learningPlanRepository.findById(postId);
+
+        if (!optionalLearningPlan.isPresent()){
+            throw new NotFoundException("learning plan not found with id : " + postId);
+        }
+
+        LearningPlan updateLeaningPlan = optionalLearningPlan.get();
+
+        updateLeaningPlan.setTitle(updateLearningPlanRequest.getTitle());
+        updateLeaningPlan.setTopics(updateLearningPlanRequest.getTopics());
+        updateLeaningPlan.setResources(updateLearningPlanRequest.getResources());
+        updateLeaningPlan.setStartDate(updateLearningPlanRequest.getStartDate());
+        updateLeaningPlan.setEndDate(updateLearningPlanRequest.getEndDate());
+
+        learningPlanRepository.save(updateLeaningPlan);
+
+        return LearningPlanResponse.builder()
+                .id(updateLeaningPlan.getId())
+                .userId(updateLeaningPlan.getUserId())
+                .title(updateLeaningPlan.getTitle())
+                .topics(updateLeaningPlan.getTopics())
+                .resources(updateLeaningPlan.getResources())
+                .startDate(updateLeaningPlan.getStartDate())
+                .endDate(updateLeaningPlan.getEndDate())
+                .status(updateLeaningPlan.getStatus())
+                .build();
+    }
+
+    @Override
+    public List<LearningPlanResponse> getAllLearningPlanByUserId(String userId) throws NotFoundException {
+
+        List<LearningPlan> learningPlans = learningPlanRepository.findAllByUserId(userId);
+
+        if (learningPlans == null){
+            throw new NotFoundException("learning plans not found with user id : " + userId);
+        }
+
+        List<LearningPlanResponse> learningPlanResponses = new ArrayList<>();
+
+        for(LearningPlan learningPlan : learningPlans){
+            LearningPlanResponse response = LearningPlanResponse.builder()
+                    .id(learningPlan.getId())
+                    .userId(learningPlan.getUserId())
+                    .title(learningPlan.getTitle())
+                    .topics(learningPlan.getTopics())
+                    .resources(learningPlan.getResources())
+                    .startDate(learningPlan.getStartDate())
+                    .endDate(learningPlan.getEndDate())
+                    .status(learningPlan.getStatus())
+                    .build();
+            learningPlanResponses.add(response);
+        }
+        return learningPlanResponses;
     }
 }
