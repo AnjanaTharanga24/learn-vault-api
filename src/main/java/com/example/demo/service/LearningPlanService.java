@@ -14,4 +14,5 @@ public interface LearningPlanService {
     LearningPlanResponse updateLearningPlanStatus(LearningPlanStatusUpdateRequest learningPlanStatusUpdateRequest) throws NotFoundException;
     LearningPlanResponse updateLearningPlan(UpdateLearningPlanRequest updateLearningPlanRequest , String postId) throws NotFoundException;
     List<LearningPlanResponse> getAllLearningPlanByUserId(String userId)throws NotFoundException;
+    String deleteLearningPlanById(String postId)throws NotFoundException;
 }
