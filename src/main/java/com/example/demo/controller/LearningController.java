@@ -58,4 +58,9 @@ public class LearningController {
         return learningPlanService.updateLearningPlan(updateLearningPlanRequest , postId);
     }
 
+    @GetMapping("/plans/{user-id}")
+    public List<LearningPlanResponse> getAllLearningPlansByUserId(@PathVariable("user-id")String userId)throws NotFoundException{
+        return learningPlanService.getAllLearningPlanByUserId(userId);
+    }
+
 }
