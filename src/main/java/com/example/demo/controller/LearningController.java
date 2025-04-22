@@ -63,4 +63,9 @@ public class LearningController {
         return learningPlanService.getAllLearningPlanByUserId(userId);
     }
 
+    @DeleteMapping("/plans/{post-id}")
+    public String deleteLearningPlan(@PathVariable("post-id")String postId) throws NotFoundException{
+        return learningPlanService.deleteLearningPlanById(postId);
+    }
+
 }

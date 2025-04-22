@@ -140,4 +140,19 @@ public class LearningPlanServiceImpl implements LearningPlanService {
         }
         return learningPlanResponses;
     }
+
+    @Override
+    public String deleteLearningPlanById(String postId) throws NotFoundException {
+
+        Optional<LearningPlan> optionalLearningPlan = learningPlanRepository.findById(postId);
+
+        if(!optionalLearningPlan.isPresent()){
+            throw new NotFoundException("post not found with id : " + postId);
+        }
+
+        learningPlanRepository.deleteById(postId);
+
+        return "learnin plan delete succefull with id : " + postId;
+
+    }
 }
