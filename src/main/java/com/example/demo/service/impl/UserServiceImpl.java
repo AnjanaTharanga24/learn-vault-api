@@ -45,6 +45,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse loginOrRegisterOAuthUser(String name, String email, String imgUrl, String providerId) throws AllReadyExistsException {
+        return null;
+    }
+
+    @Override
     public List<UserResponse> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream().map(this::mapToUserResponse).toList();
