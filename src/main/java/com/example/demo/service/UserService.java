@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface UserService {
     UserResponse registerUser(UserRequest userRequest) throws AllReadyExistsException;
+    UserResponse loginOrRegisterOAuthUser(String name, String email, String imgUrl, String providerId) throws AllReadyExistsException;
     List<UserResponse> getAllUsers();
     UserResponse updateUser(String userId, UserRequest userRequest) throws NotFoundException, AllReadyExistsException;
     void deleteUser(String userId) throws NotFoundException;
