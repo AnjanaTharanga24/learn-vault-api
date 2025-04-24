@@ -11,6 +11,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,8 +40,9 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{userId}")
-    public void deleteUser(@PathVariable String userId) throws NotFoundException {
+    public ResponseEntity<String> deleteUser(@PathVariable String userId) throws NotFoundException {
         userService.deleteUser(userId);
+        return ResponseEntity.ok("User deleted successfully !!");
     }
 
     @PostMapping("/login")
