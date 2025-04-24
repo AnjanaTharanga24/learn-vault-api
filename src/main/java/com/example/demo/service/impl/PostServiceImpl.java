@@ -178,7 +178,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deleteComment(String postId, String commentId, String userId) {
+    public String deleteComment(String postId, String commentId, String userId) {
         // verify post exists
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
@@ -200,6 +200,8 @@ public class PostServiceImpl implements PostService {
 
         // 5) delete the comment document
         commentRepository.deleteById(commentId);
+
+        return "Comment was added successfully";
     }
 
 
