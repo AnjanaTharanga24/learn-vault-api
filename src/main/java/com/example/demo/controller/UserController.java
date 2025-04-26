@@ -11,6 +11,12 @@ import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AiService;
+
+
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.AiService;
+
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -53,13 +59,17 @@ public class UserController {
         return userService.loginUser(loginRequest);
     }
 
+
     @GetMapping("/motivation")
     public MotivationMessageResponse getMotivation() {
-        return aiService.getMotivationMessage();}
+        return aiService.getMotivationMessage();
+    }
+
 
     @PostMapping("/login-or-signup-by-oauth")
     public LoginResponse loginOrRegisterByOAuth(@RequestBody OAuthUserRequest oAuthUserRequest) {
         return userService.loginOrRegisterOAuthUser(oAuthUserRequest);
+
     }
 
 }
