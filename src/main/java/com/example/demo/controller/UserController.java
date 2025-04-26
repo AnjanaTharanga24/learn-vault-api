@@ -1,16 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.LoginRequest;
+import com.example.demo.dto.request.OAuthUserRequest;
 import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.exception.AllReadyExistsException;
 import com.example.demo.exception.NotFoundException;
-import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +46,11 @@ public class UserController {
     @PostMapping("/login")
     public LoginResponse loginResponse(@RequestBody LoginRequest loginRequest) throws NotFoundException {
         return userService.loginUser(loginRequest);
+    }
+
+    @PostMapping("/login-or-signup-by-oauth")
+    public LoginResponse loginOrRegisterByOAuth(@RequestBody OAuthUserRequest oAuthUserRequest) {
+        return userService.loginOrRegisterOAuthUser(oAuthUserRequest);
     }
 
 }
