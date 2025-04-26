@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,5 +52,17 @@ public class JwtUtil {
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public String generateTokenByEmail(String email) {
+        Date createDate = new Date();
+        Date expirationDate = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
+
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(createDate)
+                .setExpiration(expirationDate)
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
     }
 }
