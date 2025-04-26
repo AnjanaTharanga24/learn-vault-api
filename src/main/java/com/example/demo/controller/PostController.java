@@ -36,7 +36,6 @@ public class PostController {
     }
 
 
-
     @GetMapping("/feed")
     public List<PostResponse> getAllPosts() {
         return postService.getAllPosts();
