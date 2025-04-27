@@ -53,8 +53,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> existingUserOptional = Optional.ofNullable(userRepository.findByEmail(oAuthUserRequest.getEmail()));
 
         User user = new User();
-        String userStatus = null;
-
+        String userStatus;
 
         if (existingUserOptional.isPresent()) {
             user = existingUserOptional.get();
@@ -66,6 +65,9 @@ public class UserServiceImpl implements UserService {
             user.setEmail(oAuthUserRequest.getEmail());
             user.setImgUrl(oAuthUserRequest.getImgUrl());
             user.setProviderId(oAuthUserRequest.getProviderId());
+            //  Set username and password for normal login
+            user.setUsername("");
+            user.setPassword("");
 
             user = userRepository.save(user);
             userStatus = "new_user";
