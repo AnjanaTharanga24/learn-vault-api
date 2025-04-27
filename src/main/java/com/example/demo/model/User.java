@@ -19,6 +19,8 @@ public class User {
     private String password;
     private String username;
     private String imgUrl;
+    // Registration type
+    private String providerId;
     // List of followers and following
     private List<FollowInfo> followers = new ArrayList<>();
     private List<FollowInfo> following = new ArrayList<>();

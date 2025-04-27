@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.request.LoginRequest;
+import com.example.demo.dto.request.OAuthUserRequest;
 import com.example.demo.dto.request.UserRequest;
 import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.dto.response.UserResponse;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -36,8 +38,10 @@ public class UserServiceImpl implements UserService {
         validateUserRequest(userRequest);
 
         User user = new User();
-        //Set user details
+        // Set user details
         setUserDetails(user, userRequest);
+        // Set registration type
+        user.setProviderId("form");
 
         userRepository.save(user);
 
@@ -45,8 +49,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse loginOrRegisterOAuthUser(String name, String email, String imgUrl, String providerId) throws AllReadyExistsException {
-        return null;
+    public LoginResponse loginOrRegisterOAuthUser(OAuthUserRequest oAuthUserRequest) {
+        Optional<User> existingUserOptional = Optional.ofNullable(userRepository.findByEmail(oAuthUserRequest.getEmail()));
+
+        User user = new User();
+        String userStatus;
+
+
+        if (existingUserOptional.isPresent()) {
+            user = existingUserOptional.get();
+            userStatus = "active_user";
+
+        }
+        else{
+            user.setName(oAuthUserRequest.getName());
+            user.setEmail(oAuthUserRequest.getEmail());
+            user.setImgUrl(oAuthUserRequest.getImgUrl());
+            user.setProviderId(oAuthUserRequest.getProviderId());
+            //  Set username and password for normal login
+            user.setUsername("");
+            user.setPassword("");
+
+            user = userRepository.save(user);
+            userStatus = "new_user";
+        }
+
+        String tokenByEmail = jwtUtil.generateTokenByEmail(oAuthUserRequest.getEmail());
+
+        return LoginResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .token(tokenByEmail)
+                .userType(userStatus)
+                .build();
+
+
     }
 
     @Override
