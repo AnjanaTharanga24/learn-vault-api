@@ -66,6 +66,9 @@ public class UserServiceImpl implements UserService {
             user.setEmail(oAuthUserRequest.getEmail());
             user.setImgUrl(oAuthUserRequest.getImgUrl());
             user.setProviderId(oAuthUserRequest.getProviderId());
+            //  Set username and password for normal login
+            user.setUsername("");
+            user.setPassword("");
 
             user = userRepository.save(user);
             userStatus = "new_user";
