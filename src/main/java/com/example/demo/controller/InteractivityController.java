@@ -55,8 +55,8 @@ public class InteractivityController {
     }
 
     @DeleteMapping("/comment")
-    public String deleteComment(@RequestParam String postId,@RequestParam String commentId,@RequestParam String userId) {
+    public ResponseEntity<Void> deleteComment(@RequestParam String postId,@RequestParam String commentId,@RequestParam String userId) {
         postService.deleteComment(postId, commentId, userId);
-        return postService.deleteComment(postId, commentId, userId);
+        return ResponseEntity.noContent().build();
     }
 }
