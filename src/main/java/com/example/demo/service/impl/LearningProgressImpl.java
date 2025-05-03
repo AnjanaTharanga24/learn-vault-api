@@ -120,4 +120,11 @@ public class LearningProgressImpl implements LearningProgressService {
 
         return "post deleted successfull with id : " + postId;
     }
+
+    @Override
+    public List<LearningProgress> getAllLEarningProgress() {
+        List<LearningProgress> learningProgresses = learningProgressRepository.findAll();
+        return learningProgresses;
+    }
+
 }

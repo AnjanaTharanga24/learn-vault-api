@@ -5,6 +5,8 @@ import com.example.demo.dto.request.LearningPlanStatusUpdateRequest;
 import com.example.demo.dto.request.UpdateLearningPlanRequest;
 import com.example.demo.dto.response.LearningPlanResponse;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.LearningPlan;
+import com.example.demo.model.User;
 
 import java.util.List;
 
@@ -15,4 +17,6 @@ public interface LearningPlanService {
     LearningPlanResponse updateLearningPlan(UpdateLearningPlanRequest updateLearningPlanRequest , String postId) throws NotFoundException;
     List<LearningPlanResponse> getAllLearningPlanByUserId(String userId)throws NotFoundException;
     String deleteLearningPlanById(String postId)throws NotFoundException;
+    List<LearningPlan> getAllLearningPlan();
+
 }

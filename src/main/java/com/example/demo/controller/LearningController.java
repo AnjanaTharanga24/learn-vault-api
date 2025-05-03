@@ -4,6 +4,9 @@ import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.LearningPlanResponse;
 import com.example.demo.dto.response.LearningProgressResponse;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.LearningPlan;
+import com.example.demo.model.LearningProgress;
+import com.example.demo.model.User;
 import com.example.demo.service.LearningPlanService;
 import com.example.demo.service.LearningProgressService;
 import lombok.AllArgsConstructor;
@@ -14,6 +17,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/learning")
+@CrossOrigin("http://localhost:3000/")
 public class LearningController {
 
     private LearningProgressService learningProgressService;
@@ -41,6 +45,12 @@ public class LearningController {
         return learningProgressService.deleteLearningProgress(postId);
     }
 
+    @GetMapping("/feed")
+    public List<LearningProgress> getAllLearningProgress(){
+        return learningProgressService.getAllLEarningProgress();
+    }
+
+
     //learning plan
 
     @PostMapping("/plans")
@@ -66,6 +76,11 @@ public class LearningController {
     @DeleteMapping("/plans/{post-id}")
     public String deleteLearningPlan(@PathVariable("post-id")String postId) throws NotFoundException{
         return learningPlanService.deleteLearningPlanById(postId);
+    }
+
+    @GetMapping("/plan/feed")
+    public List<LearningPlan> getAllLearningPlans(){
+        return learningPlanService.getAllLearningPlan();
     }
 
 }

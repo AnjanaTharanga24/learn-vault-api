@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +36,7 @@ public class PostServiceImpl implements PostService {
         if (postRequest.getImageUrls() != null && postRequest.getImageUrls().size() > 3) {
             throw new IllegalArgumentException("Maximum allowed image URLs is 3.");
         }
+
 
         // Create a new Post instance and set its fields from the PostRequest DTO
         Post post = new Post();
@@ -218,6 +220,12 @@ public class PostServiceImpl implements PostService {
             response.setComments(post.getComments()); // Assuming PostResponse.comments is of a compatible type
             return response;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Post> getPostsByUserId(String userId) {
+        List<Post> posts = postRepository.findAllByUserId(userId);
+        return posts;
     }
 
 

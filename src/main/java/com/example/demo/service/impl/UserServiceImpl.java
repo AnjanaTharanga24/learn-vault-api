@@ -53,8 +53,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> existingUserOptional = Optional.ofNullable(userRepository.findByEmail(oAuthUserRequest.getEmail()));
 
         User user = new User();
-        String userStatus = null;
-
+        String userStatus;
 
         if (existingUserOptional.isPresent()) {
             user = existingUserOptional.get();
@@ -144,6 +143,15 @@ public class UserServiceImpl implements UserService {
                 .username(foundUser.getUsername())
                 .token(jwt)
                 .build();
+    }
+
+    @Override
+    public User getUserById(String userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        User user = userOptional.get();
+
+        return user;
     }
 
     private void validateUserRequest(UserRequest userRequest) throws AllReadyExistsException{
