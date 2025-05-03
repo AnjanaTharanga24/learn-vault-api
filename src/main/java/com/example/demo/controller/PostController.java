@@ -6,6 +6,7 @@ import com.example.demo.dto.response.CommentResponse;
 import com.example.demo.dto.response.PostResponse;
 import com.example.demo.exception.AllReadyExistsException;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.Post;
 import com.example.demo.service.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,5 +41,10 @@ public class PostController {
     @GetMapping("/feed")
     public List<PostResponse> getAllPosts() {
         return postService.getAllPosts();
+    }
+
+    @GetMapping("/posts/{user-id}")
+    public List<Post> getALlPostsByUserId(@PathVariable("user-id")String userId){
+        return postService.getPostsByUserId(userId);
     }
 }
