@@ -10,12 +10,11 @@ import com.example.demo.exception.AllReadyExistsException;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-//import com.example.demo.service.AiService;
 
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-//import com.example.demo.service.AiService;
+import com.example.demo.service.AiService;
 
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
@@ -61,10 +60,10 @@ public class UserController {
     }
 
 
-//    @GetMapping("/motivation")
-//    public MotivationMessageResponse getMotivation() {
-//        return aiService.getMotivationMessage();
-//    }
+   @GetMapping("/motivation")
+   public MotivationMessageResponse getMotivation() {
+       return aiService.getMotivationMessage();
+   }
 
 
     @PostMapping("/login-or-signup-by-oauth")
