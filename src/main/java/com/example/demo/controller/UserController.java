@@ -9,18 +9,15 @@ import com.example.demo.dto.response.UserResponse;
 import com.example.demo.exception.AllReadyExistsException;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
 
 
-import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
+
 import com.example.demo.service.AiService;
 
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import retrofit2.http.Path;
 
 import java.util.List;
 
@@ -31,7 +28,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-//    private final AiService aiService;
+    private final AiService aiService;
 
     @PostMapping("/register")
     public UserResponse register(@RequestBody UserRequest userRequest) throws AllReadyExistsException {
