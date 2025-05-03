@@ -10,17 +10,18 @@ import com.example.demo.exception.AllReadyExistsException;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.AiService;
+//import com.example.demo.service.AiService;
 
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.AiService;
+//import com.example.demo.service.AiService;
 
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.http.Path;
 
 import java.util.List;
 
@@ -31,11 +32,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final AiService aiService;
+//    private final AiService aiService;
 
     @PostMapping("/register")
     public UserResponse register(@RequestBody UserRequest userRequest) throws AllReadyExistsException {
-       return userService.registerUser(userRequest);
+        return userService.registerUser(userRequest);
     }
 
     @GetMapping("/all-users")
@@ -60,15 +61,21 @@ public class UserController {
     }
 
 
-    @GetMapping("/motivation")
-    public MotivationMessageResponse getMotivation() {
-        return aiService.getMotivationMessage();
-    }
+//    @GetMapping("/motivation")
+//    public MotivationMessageResponse getMotivation() {
+//        return aiService.getMotivationMessage();
+//    }
 
 
     @PostMapping("/login-or-signup-by-oauth")
     public LoginResponse loginOrRegisterByOAuth(@RequestBody OAuthUserRequest oAuthUserRequest) {
         return userService.loginOrRegisterOAuthUser(oAuthUserRequest);
+
+    }
+
+    @GetMapping("/{user-id}")
+    public User getUserById(@PathVariable("user-id") String userId){
+        return userService.getUserById(userId);
 
     }
 

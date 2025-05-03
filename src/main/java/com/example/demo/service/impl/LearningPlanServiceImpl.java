@@ -155,4 +155,11 @@ public class LearningPlanServiceImpl implements LearningPlanService {
         return "learnin plan delete succefull with id : " + postId;
 
     }
+
+    @Override
+    public List<LearningPlan> getAllLearningPlan() {
+
+        List<LearningPlan> learningPlans = learningPlanRepository.findAll();
+        return learningPlans;
+    }
 }

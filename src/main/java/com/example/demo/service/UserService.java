@@ -7,6 +7,7 @@ import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.dto.response.UserResponse;
 import com.example.demo.exception.AllReadyExistsException;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.User;
 
 import java.util.List;
 
@@ -17,4 +18,5 @@ public interface UserService {
     UserResponse updateUser(String userId, UserRequest userRequest) throws NotFoundException, AllReadyExistsException;
     void deleteUser(String userId) throws NotFoundException;
     LoginResponse loginUser(LoginRequest loginRequest) throws NotFoundException;
+    User getUserById (String userId);
 }
