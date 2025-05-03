@@ -4,6 +4,7 @@ import com.example.demo.dto.request.CommentRequest;
 import com.example.demo.dto.request.PostRequest;
 import com.example.demo.dto.response.CommentResponse;
 import com.example.demo.dto.response.PostResponse;
+import com.example.demo.model.Post;
 
 import java.util.List;
 
@@ -22,5 +23,7 @@ public interface PostService {
     void deleteComment(String postId,String commentId,String userId);
 
     List<PostResponse> getAllPosts();
+
+    List<Post> getPostsByUserId(String userId);
 
 }
