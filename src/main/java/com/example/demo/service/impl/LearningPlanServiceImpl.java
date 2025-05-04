@@ -1,19 +1,26 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.request.CommentRequest;
 import com.example.demo.dto.request.LearningPlanRequest;
 import com.example.demo.dto.request.LearningPlanStatusUpdateRequest;
 import com.example.demo.dto.request.UpdateLearningPlanRequest;
+import com.example.demo.dto.response.CommentResponse;
 import com.example.demo.dto.response.LearningPlanResponse;
 import com.example.demo.exception.NotFoundException;
+import com.example.demo.model.Comment;
 import com.example.demo.model.LearningPlan;
+import com.example.demo.model.Post;
 import com.example.demo.model.User;
+import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.LearningPlanRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.LearningPlanService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +28,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class LearningPlanServiceImpl implements LearningPlanService {
 
+    private final CommentRepository commentRepository;
     private LearningPlanRepository learningPlanRepository;
     private UserRepository userRepository;
 
@@ -161,5 +169,94 @@ public class LearningPlanServiceImpl implements LearningPlanService {
 
         List<LearningPlan> learningPlans = learningPlanRepository.findAll();
         return learningPlans;
+    }
+
+    //add comment
+    @Override
+    public String addComment(String id, CommentRequest commentRequest) {
+        // Retrieve the post by its ID
+        LearningPlan learningPlan = learningPlanRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Learning Plan not found with id: " + id));
+
+        // Look up the user who made the comment (assuming your DTO has a userId field)
+        User user = userRepository.findById(commentRequest.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + commentRequest.getUserId()));
+
+        // Create a new Comment instance and populate its fields
+        Comment comment = new Comment();
+        comment.setLearningPlanId(learningPlan.getId());
+        comment.setUser(user);
+        comment.setComment(commentRequest.getComment());
+        comment.setCommentedDate(new Date());
+
+
+        commentRepository.save(comment);
+        // Add the new comment to the post's comment list
+        learningPlan.getComments().add(comment);
+
+        // Save the updated post
+        learningPlanRepository.save(learningPlan);
+
+
+        return "Comment was added successfully";
+    }
+
+    @Override
+    public CommentResponse updateComment(String postId, String userId, String commentId, CommentRequest req) {
+        // verify post exists
+//        Post post = postRepository.findById(postId)
+//                .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
+//
+//        // load comment
+//        Comment comment = commentRepository.findById(commentId)
+//                .orElseThrow(() -> new RuntimeException("Comment not found with id: " + commentId));
+//
+//        // ensure the caller is the author
+//        if (!comment.getUser().getId().equals(userId)) {
+//            throw new AccessDeniedException("You can only edit your own comments");
+//        }
+//
+//        // apply update
+//        comment.setComment(req.getComment());
+//        comment.setCommentedDate(new Date());
+//
+//        Comment saved = commentRepository.save(comment);
+//
+//        // inline-map to DTO
+//        return CommentResponse.builder()
+//                .commentId(saved.getCommentId())
+//                .comment(saved.getComment())
+//                .commentedDate(saved.getCommentedDate())
+//                .postId(saved.getPostId())
+//                .userId(saved.getUser().getId())
+//                .build();
+
+        return null;
+    }
+
+    @Override
+    public void deleteComment(String postId, String commentId, String userId) {
+        // verify post exists
+//        Post post = postRepository.findById(postId)
+//                .orElseThrow(() -> new RuntimeException("Post not found with id: " + postId));
+//
+//        // load comment
+//        Comment comment = commentRepository.findById(commentId)
+//                .orElseThrow(() -> new RuntimeException("Comment not found with id: " + commentId));
+//
+//        // 3) check permissions: must be either comment’s author OR post’s author
+//        boolean isCommentAuthor = comment.getUser().getId().equals(userId);
+//        boolean isPostAuthor    = post.getUser().getId().equals(userId);
+//        if (! (isCommentAuthor || isPostAuthor) ) {
+//            throw new AccessDeniedException("Only the comment’s author or the post’s author can delete this comment");
+//        }
+//
+//        // 4) remove the reference from post.comments
+//        post.getComments().removeIf(c -> c.getCommentId().equals(commentId));
+//        postRepository.save(post);
+//
+//        // 5) delete the comment document
+//        commentRepository.deleteById(commentId);
+
     }
 }

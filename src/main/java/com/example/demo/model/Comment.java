@@ -19,4 +19,5 @@ public class Comment {
     @DBRef
     private User user;
     String postId;
+    String learningPlanId;
 }

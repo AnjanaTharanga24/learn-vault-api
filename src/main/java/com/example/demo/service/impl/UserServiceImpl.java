@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
 
         return mapToUserResponse(existingUser);
     }
-
+           
     @Override
     public void deleteUser(String userId) throws NotFoundException {
 

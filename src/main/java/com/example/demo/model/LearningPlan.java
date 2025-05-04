@@ -2,9 +2,11 @@ package com.example.demo.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "learning_plan")
@@ -21,5 +23,7 @@ public class LearningPlan {
     private LocalDate startDate;
     private LocalDate endDate;
     private LearningPlanStatus status;
+    @DBRef
+    private ArrayList<Comment> comments = new ArrayList<>();
 
 }

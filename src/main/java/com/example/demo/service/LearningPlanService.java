@@ -1,8 +1,10 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.request.CommentRequest;
 import com.example.demo.dto.request.LearningPlanRequest;
 import com.example.demo.dto.request.LearningPlanStatusUpdateRequest;
 import com.example.demo.dto.request.UpdateLearningPlanRequest;
+import com.example.demo.dto.response.CommentResponse;
 import com.example.demo.dto.response.LearningPlanResponse;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.LearningPlan;
@@ -19,4 +21,10 @@ public interface LearningPlanService {
     String deleteLearningPlanById(String postId)throws NotFoundException;
     List<LearningPlan> getAllLearningPlan();
 
+    //comment
+    String addComment(String postId, CommentRequest commentRequest);
+
+    CommentResponse updateComment(String postId, String userId, String commentId, CommentRequest req);
+
+    void deleteComment(String postId,String commentId,String userId);
 }
