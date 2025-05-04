@@ -7,7 +7,6 @@ import com.example.demo.dto.response.LearningProgressResponse;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.LearningPlan;
 import com.example.demo.model.LearningProgress;
-import com.example.demo.model.User;
 import com.example.demo.service.LearningPlanService;
 import com.example.demo.service.LearningProgressService;
 import lombok.AllArgsConstructor;

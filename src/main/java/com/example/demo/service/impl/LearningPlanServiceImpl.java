@@ -9,7 +9,6 @@ import com.example.demo.dto.response.LearningPlanResponse;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Comment;
 import com.example.demo.model.LearningPlan;
-import com.example.demo.model.Post;
 import com.example.demo.model.User;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.LearningPlanRepository;
