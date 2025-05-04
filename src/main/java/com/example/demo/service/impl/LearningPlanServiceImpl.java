@@ -9,6 +9,7 @@ import com.example.demo.dto.response.LearningPlanResponse;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.Comment;
 import com.example.demo.model.LearningPlan;
+import com.example.demo.model.Post;
 import com.example.demo.model.User;
 import com.example.demo.repository.CommentRepository;
 import com.example.demo.repository.LearningPlanRepository;
@@ -256,5 +257,28 @@ public class LearningPlanServiceImpl implements LearningPlanService {
         // delete the comment document
         commentRepository.deleteById(commentId);
 
+    }
+
+    @Override
+    public int likePost(String postId, String userId) {
+        Optional<LearningPlan> optionalLearningPlan = learningPlanRepository.findById(postId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+
+        if (optionalLearningPlan.isPresent() && optionalUser.isPresent()) {
+            LearningPlan learningPlan = optionalLearningPlan.get();
+            User user = optionalUser.get();
+
+            if (!learningPlan.getLikedBy().contains(user)) {
+                learningPlan.getLikedBy().add(user);
+                learningPlanRepository.save(learningPlan);
+            }
+            else{
+                learningPlan.getLikedBy().remove(user);
+                learningPlanRepository.save(learningPlan);
+            }
+            return learningPlan.getLikedBy().size();
+        } else {
+            throw new RuntimeException("Post or User not found.");
+        }
     }
 }

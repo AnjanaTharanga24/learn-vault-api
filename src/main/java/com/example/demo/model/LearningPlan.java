@@ -25,5 +25,7 @@ public class LearningPlan {
     private LearningPlanStatus status;
     @DBRef
     private ArrayList<Comment> comments = new ArrayList<>();
+    @DBRef
+    private List<User> likedBy = new ArrayList<>();
 
 }

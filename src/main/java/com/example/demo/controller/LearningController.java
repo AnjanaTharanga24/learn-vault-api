@@ -101,4 +101,10 @@ public class LearningController {
         return ResponseEntity.noContent().build();
     }
 
+    //like
+    @PostMapping("/like")
+    public int likePost(@RequestParam String id, @RequestParam String userId) {
+        return learningPlanService.likePost(id, userId);
+    }
+
 }

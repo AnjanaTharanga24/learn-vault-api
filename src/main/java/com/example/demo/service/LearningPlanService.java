@@ -27,4 +27,7 @@ public interface LearningPlanService {
     CommentResponse updateComment(String postId, String userId, String commentId, CommentRequest req);
 
     void deleteComment(String postId,String commentId,String userId);
+
+    //like learning plans
+    int likePost(String postId,String userId);
 }
