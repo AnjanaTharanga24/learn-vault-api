@@ -74,12 +74,16 @@ public class UserServiceImpl implements UserService {
         }
 
         String tokenByEmail = jwtUtil.generateTokenByEmail(oAuthUserRequest.getEmail());
+        Integer followerCount = user.getFollowers().size();
+        Integer followingCount = user.getFollowing().size();
 
         return LoginResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .username(user.getUsername())
+                .followerCount(followerCount)
+                .followingCount(followingCount)
                 .token(tokenByEmail)
                 .userType(userStatus)
                 .build();

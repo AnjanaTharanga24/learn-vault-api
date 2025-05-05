@@ -12,4 +12,6 @@ public class LoginResponse {
     private String username;
     private String token;
     private String userType;
+    private Integer followerCount;
+    private Integer followingCount;
 }
