@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/")
+@CrossOrigin("http://localhost:3000/")
 public class InteractivityController {
 
     private final FollowService followService;
