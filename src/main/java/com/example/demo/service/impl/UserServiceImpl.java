@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse registerUser(UserRequest userRequest) throws AllReadyExistsException {
         // Validate user email and username
-        validateUserRequest(userRequest);
+        validateUserRequest(userRequest, "");
 
         User user = new User();
         // Set user details
@@ -74,12 +74,16 @@ public class UserServiceImpl implements UserService {
         }
 
         String tokenByEmail = jwtUtil.generateTokenByEmail(oAuthUserRequest.getEmail());
+        Integer followerCount = user.getFollowers().size();
+        Integer followingCount = user.getFollowing().size();
 
         return LoginResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .username(user.getUsername())
+                .followerCount(followerCount)
+                .followingCount(followingCount)
                 .token(tokenByEmail)
                 .userType(userStatus)
                 .build();
@@ -97,17 +101,41 @@ public class UserServiceImpl implements UserService {
     public UserResponse updateUser(String userId, UserRequest userRequest) throws NotFoundException, AllReadyExistsException {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
-        // Validate user email and username
-        validateUserRequest(userRequest);
-        // Set updated details
-        setUserDetails(existingUser, userRequest);
-        // Set image
-        if(userRequest.getImgUrl() != null && !userRequest.getImgUrl().isEmpty()) {
+
+        // Validate only if the field is being changed
+        if (userRequest.getUsername() != null && !userRequest.getUsername().equals(existingUser.getUsername())) {
+            User existsUserByUsername = userRepository.findByUsername(userRequest.getUsername());
+            if (existsUserByUsername != null) {
+                throw new AllReadyExistsException("User already exists with username: " + userRequest.getUsername());
+            }
+        }
+
+        if (userRequest.getEmail() != null && !userRequest.getEmail().equals(existingUser.getEmail())) {
+            User existsUserByEmail = userRepository.findByEmail(userRequest.getEmail());
+            if (existsUserByEmail != null) {
+                throw new AllReadyExistsException("User already exists with email: " + userRequest.getEmail());
+            }
+        }
+
+        // Set updated details - only update fields that are provided
+        if (userRequest.getName() != null) {
+            existingUser.setName(userRequest.getName());
+        }
+        if (userRequest.getEmail() != null) {
+            existingUser.setEmail(userRequest.getEmail());
+        }
+        if (userRequest.getUsername() != null) {
+            existingUser.setUsername(userRequest.getUsername());
+        }
+        if (userRequest.getPassword() != null && !userRequest.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        }
+        if (userRequest.getImgUrl() != null && !userRequest.getImgUrl().isEmpty()) {
+
             existingUser.setImgUrl(userRequest.getImgUrl());
         }
-        // Save user
-        userRepository.save(existingUser);
 
+        userRepository.save(existingUser);
         return mapToUserResponse(existingUser);
     }
            
@@ -154,17 +182,26 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private void validateUserRequest(UserRequest userRequest) throws AllReadyExistsException{
+    private void validateUserRequest(UserRequest userRequest, String currentUserId) throws AllReadyExistsException{
 
-        User existsUserByUsername = userRepository.findByUsername(userRequest.getUsername());
-        User existsUserByEmail = userRepository.findByEmail(userRequest.getEmail());
-
-        if(existsUserByUsername != null){
-            throw new AllReadyExistsException("User already exists with username: " + userRequest.getUsername());
+        // Check username uniqueness
+        if (userRequest.getUsername() != null) {
+            User existingUserByUsername = userRepository.findByUsername(userRequest.getUsername());
+            if (existingUserByUsername != null) {
+                if (currentUserId == null || !existingUserByUsername.getId().equals(currentUserId)) {
+                    throw new AllReadyExistsException("User already exists with username: " + userRequest.getUsername());
+                }
+            }
         }
 
-        if(existsUserByEmail != null){
-            throw new AllReadyExistsException("User already exists with email: " + userRequest.getEmail());
+        // Check email uniqueness
+        if (userRequest.getEmail() != null) {
+            User existingUserByEmail = userRepository.findByEmail(userRequest.getEmail());
+            if (existingUserByEmail != null) {
+                if (currentUserId == null || !existingUserByEmail.getId().equals(currentUserId)) {
+                    throw new AllReadyExistsException("User already exists with email: " + userRequest.getEmail());
+                }
+            }
         }
     }
 
