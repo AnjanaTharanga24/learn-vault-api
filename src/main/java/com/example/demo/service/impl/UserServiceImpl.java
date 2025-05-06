@@ -169,6 +169,8 @@ public class UserServiceImpl implements UserService {
                 .name(foundUser.getName())
                 .email(foundUser.getEmail())
                 .username(foundUser.getUsername())
+                .followerCount(foundUser.getFollowers().size())
+                .followingCount(foundUser.getFollowing().size())
                 .token(jwt)
                 .build();
     }
