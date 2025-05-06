@@ -60,4 +60,11 @@ public class InteractivityController {
         postService.deleteComment(postId, commentId, userId);
         return ResponseEntity.noContent().build();
     }
+
+    //like a post
+    @PostMapping("/like")
+    public int likePost(@RequestParam String postId, @RequestParam String userId) {
+        return postService.likePost(postId, userId);
+    }
+
 }

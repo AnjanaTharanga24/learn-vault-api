@@ -204,6 +204,29 @@ public class PostServiceImpl implements PostService {
         commentRepository.deleteById(commentId);
     }
 
+    @Override
+    public int likePost(String postId, String userId) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+
+        if (optionalPost.isPresent() && optionalUser.isPresent()) {
+            Post post = optionalPost.get();
+            User user = optionalUser.get();
+
+            if (!post.getLikedBy().contains(user)) {
+                post.getLikedBy().add(user);
+                postRepository.save(post);
+            }
+            else{
+                post.getLikedBy().remove(user);
+                postRepository.save(post);
+            }
+            return post.getLikedBy().size();
+        } else {
+            throw new RuntimeException("Post or User not found.");
+        }
+    }
+
 
     @Override
     public List<PostResponse> getAllPosts() {

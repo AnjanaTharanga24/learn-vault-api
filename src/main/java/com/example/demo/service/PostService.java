@@ -22,6 +22,8 @@ public interface PostService {
 
     void deleteComment(String postId,String commentId,String userId);
 
+    int likePost(String postId,String userId);
+
     List<PostResponse> getAllPosts();
 
     List<Post> getPostsByUserId(String userId);

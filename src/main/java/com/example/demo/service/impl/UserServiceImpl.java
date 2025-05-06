@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse registerUser(UserRequest userRequest) throws AllReadyExistsException {
         // Validate user email and username
-        validateUserRequest(userRequest);
+        validateUserRequest(userRequest, "");
 
         User user = new User();
         // Set user details
@@ -131,13 +131,14 @@ public class UserServiceImpl implements UserService {
             existingUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         }
         if (userRequest.getImgUrl() != null && !userRequest.getImgUrl().isEmpty()) {
+
             existingUser.setImgUrl(userRequest.getImgUrl());
         }
 
         userRepository.save(existingUser);
         return mapToUserResponse(existingUser);
     }
-
+           
     @Override
     public void deleteUser(String userId) throws NotFoundException {
 
@@ -181,17 +182,26 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private void validateUserRequest(UserRequest userRequest) throws AllReadyExistsException{
+    private void validateUserRequest(UserRequest userRequest, String currentUserId) throws AllReadyExistsException{
 
-        User existsUserByUsername = userRepository.findByUsername(userRequest.getUsername());
-        User existsUserByEmail = userRepository.findByEmail(userRequest.getEmail());
-
-        if(existsUserByUsername != null){
-            throw new AllReadyExistsException("User already exists with username: " + userRequest.getUsername());
+        // Check username uniqueness
+        if (userRequest.getUsername() != null) {
+            User existingUserByUsername = userRepository.findByUsername(userRequest.getUsername());
+            if (existingUserByUsername != null) {
+                if (currentUserId == null || !existingUserByUsername.getId().equals(currentUserId)) {
+                    throw new AllReadyExistsException("User already exists with username: " + userRequest.getUsername());
+                }
+            }
         }
 
-        if(existsUserByEmail != null){
-            throw new AllReadyExistsException("User already exists with email: " + userRequest.getEmail());
+        // Check email uniqueness
+        if (userRequest.getEmail() != null) {
+            User existingUserByEmail = userRepository.findByEmail(userRequest.getEmail());
+            if (existingUserByEmail != null) {
+                if (currentUserId == null || !existingUserByEmail.getId().equals(currentUserId)) {
+                    throw new AllReadyExistsException("User already exists with email: " + userRequest.getEmail());
+                }
+            }
         }
     }
 
