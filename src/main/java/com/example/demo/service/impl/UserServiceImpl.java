@@ -101,17 +101,41 @@ public class UserServiceImpl implements UserService {
     public UserResponse updateUser(String userId, UserRequest userRequest) throws NotFoundException, AllReadyExistsException {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
-        // Validate user email and username
-        validateUserRequest(userRequest, userId);
-        // Set updated details
-        setUserDetails(existingUser, userRequest);
-        // Set image
-        if(userRequest.getImgUrl() != null && !userRequest.getImgUrl().isEmpty()) {
+
+        // Validate only if the field is being changed
+        if (userRequest.getUsername() != null && !userRequest.getUsername().equals(existingUser.getUsername())) {
+            User existsUserByUsername = userRepository.findByUsername(userRequest.getUsername());
+            if (existsUserByUsername != null) {
+                throw new AllReadyExistsException("User already exists with username: " + userRequest.getUsername());
+            }
+        }
+
+        if (userRequest.getEmail() != null && !userRequest.getEmail().equals(existingUser.getEmail())) {
+            User existsUserByEmail = userRepository.findByEmail(userRequest.getEmail());
+            if (existsUserByEmail != null) {
+                throw new AllReadyExistsException("User already exists with email: " + userRequest.getEmail());
+            }
+        }
+
+        // Set updated details - only update fields that are provided
+        if (userRequest.getName() != null) {
+            existingUser.setName(userRequest.getName());
+        }
+        if (userRequest.getEmail() != null) {
+            existingUser.setEmail(userRequest.getEmail());
+        }
+        if (userRequest.getUsername() != null) {
+            existingUser.setUsername(userRequest.getUsername());
+        }
+        if (userRequest.getPassword() != null && !userRequest.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        }
+        if (userRequest.getImgUrl() != null && !userRequest.getImgUrl().isEmpty()) {
+
             existingUser.setImgUrl(userRequest.getImgUrl());
         }
-        // Save user
-        userRepository.save(existingUser);
 
+        userRepository.save(existingUser);
         return mapToUserResponse(existingUser);
     }
            
