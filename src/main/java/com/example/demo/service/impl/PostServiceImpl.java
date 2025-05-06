@@ -62,7 +62,7 @@ public class PostServiceImpl implements PostService {
                 .postId(post.getPostId())
                 .description(post.getDescription())
                 .imageUrls(post.getImageUrls())
-                .username(user.getUsername())
+                .user(user)
                 .videoUrl(post.getVideoUrl())
                 .build();
     }
@@ -239,7 +239,7 @@ public class PostServiceImpl implements PostService {
             response.setDescription(post.getDescription());
             response.setImageUrls(post.getImageUrls());
             response.setVideoUrl(post.getVideoUrl());
-            response.setUsername(post.getUser().getUsername());
+            response.setUser(post.getUser());
             response.setComments(post.getComments()); // Assuming PostResponse.comments is of a compatible type
             return response;
         }).collect(Collectors.toList());
