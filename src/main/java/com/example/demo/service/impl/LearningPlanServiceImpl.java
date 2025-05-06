@@ -227,7 +227,7 @@ public class LearningPlanServiceImpl implements LearningPlanService {
                 .commentId(saved.getCommentId())
                 .comment(saved.getComment())
                 .commentedDate(saved.getCommentedDate())
-                .postId(saved.getPostId())
+                .postId(saved.getLearningPlanId())
                 .userId(saved.getUser().getId())
                 .build();
 

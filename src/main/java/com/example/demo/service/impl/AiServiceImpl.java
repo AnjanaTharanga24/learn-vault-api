@@ -27,7 +27,6 @@ public class AiServiceImpl implements AiService {
 
     @Override
     public MotivationMessageResponse getMotivationMessage() {
-        System.out.println("🔑 Using OpenAI key: " + openAiApiKey);
 
         Map<String, Object> request = Map.of(
                 "model", "gpt-3.5-turbo",
@@ -54,7 +53,7 @@ public class AiServiceImpl implements AiService {
 
             return new MotivationMessageResponse(content != null ? content.trim() : "No message generated.");
         } catch (Exception e) {
-            e.printStackTrace();  // Optional: For debugging
+            e.printStackTrace();
             return new MotivationMessageResponse("⚠️ Could not generate motivational message.");
         }
     }

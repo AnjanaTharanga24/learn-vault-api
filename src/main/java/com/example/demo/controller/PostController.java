@@ -33,7 +33,7 @@ public class PostController {
     }
 
     @PutMapping("/post")
-    public PostResponse updatePost(@RequestParam String postId,String userId,@RequestBody PostRequest postRequest) throws NotFoundException {
+    public PostResponse updatePost(@RequestParam String postId,@RequestParam String userId,@RequestBody PostRequest postRequest) throws NotFoundException {
         return postService.updatePost(postId,userId,postRequest);
     }
 
